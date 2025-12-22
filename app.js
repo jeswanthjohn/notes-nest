@@ -1,5 +1,6 @@
 
-//let notes = JSON.parse(localStorage.getItem("notes")) || [];
+// STEP 1: Load notes from localStorage
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
 
 // STEP 2: DOM elements
 const noteInput = document.getElementById("noteInput");
@@ -7,9 +8,9 @@ const addBtn = document.getElementById("addBtn");
 const notesContainer = document.getElementById("notesContainer");
 
 
-//function saveNotes() {
-//  localStorage.setItem("notes", JSON.stringify(notes));
-//}
+function saveNotes() {
+  localStorage.setItem("notes", JSON.stringify(notes));
+}
 
 // STEP 4: Add note
 function addNote() {
@@ -23,7 +24,7 @@ function addNote() {
   };
 
   notes.push(note);
-  //saveNotes();
+  saveNotes();
   renderNotes();
   noteInput.value = "";
 }
@@ -31,7 +32,7 @@ function addNote() {
 // STEP 5: Delete note
 function deleteNote(id) {
   notes = notes.filter(note => note.id !== id);
-  //saveNotes();
+  saveNotes();
   renderNotes();
 }
 
