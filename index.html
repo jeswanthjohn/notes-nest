@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Notes App</title>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <title>Notes App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
+  <main class="container">
+    <header>
+      <h1>📝 Notes App</h1>
+      <p class="subtitle">Simple, fast, and persistent notes</p>
+    </header>
 
-    <div class="container">
-        <h1>📝 Notes App</h1>
+    <section class="editor">
+      <label for="noteInput">Note</label>
+      <textarea
+        id="noteInput"
+        placeholder="Write your note..."
+        aria-label="Note content"
+      ></textarea>
 
-        <textarea id="noteInput" placeholder="Write your note..."></textarea>
+      <div class="actions">
         <button id="addBtn">Add Note</button>
+        <button id="cancelBtn" class="secondary hidden">Cancel</button>
+      </div>
+    </section>
 
-        <div id="notesContainer"></div>
-    </div>
+    <section
+      id="notesContainer"
+      class="notes"
+      aria-live="polite"
+    ></section>
+  </main>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
