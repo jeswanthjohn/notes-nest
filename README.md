@@ -2,7 +2,7 @@
 
 A lightweight, client-side Notes application built with **Vanilla JavaScript** that demonstrates clean state management, DOM manipulation, and persistent storage using the browser’s localStorage.
 
-🔗 **Live Demo:** https://notes-app-jeswanth.netlify.app
+🔗 **Live Demo:** https://notes-nest-jeswanth.netlify.app
 
 ---
 
