@@ -121,6 +121,7 @@ function enterEditMode(note) {
   noteInput.value = note.content;
   addBtn.textContent = "Save";
   cancelBtn.classList.remove("hidden");
+  updateAddButtonState();
 }
 
 function exitEditMode() {
@@ -128,6 +129,13 @@ function exitEditMode() {
   noteInput.value = "";
   addBtn.textContent = "Add Note";
   cancelBtn.classList.add("hidden");
+  updateAddButtonState();
+}
+
+/* -------------------- VISUAL FEEDBACK -------------------- */
+
+function updateAddButtonState() {
+  addBtn.disabled = noteInput.value.trim() === "";
 }
 
 /* -------------------- EVENTS -------------------- */
@@ -142,10 +150,26 @@ addBtn.addEventListener("click", () => {
   } else {
     addNote(text);
     noteInput.value = "";
+    updateAddButtonState();
   }
 });
 
 cancelBtn.addEventListener("click", exitEditMode);
+
+/* -------------------- KEYBOARD INTERACTIONS -------------------- */
+
+noteInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    addBtn.click();
+  }
+
+  if (e.key === "Escape" && editingNoteId) {
+    exitEditMode();
+  }
+});
+
+noteInput.addEventListener("input", updateAddButtonState);
 
 notesContainer.addEventListener("click", e => {
   const action = e.target.dataset.action;
@@ -182,3 +206,4 @@ function escapeHTML(str) {
 
 notes = loadNotes();
 renderNotes();
+updateAddButtonState();
