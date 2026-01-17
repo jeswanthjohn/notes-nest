@@ -105,6 +105,11 @@ Persisting and validating client-side data
 
 Writing defensive, readable frontend code
 
+- Supporting keyboard-first interactions (Enter to add/save, Esc to cancel edits)
+
+- Providing clear interaction feedback by disabling actions when input is invalid
+
+
 📌 Status
 
 ✅ Feature complete
