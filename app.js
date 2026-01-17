@@ -11,6 +11,7 @@ const noteInput = document.getElementById("noteInput");
 const addBtn = document.getElementById("addBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const notesContainer = document.getElementById("notesContainer");
+const emptyState = document.getElementById("emptyState");
 
 /* -------------------- STORAGE -------------------- */
 

@@ -116,3 +116,10 @@ button:disabled {
 .note-footer button.delete {
   color: #dc3545;
 }
+
+.empty-state {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+}
