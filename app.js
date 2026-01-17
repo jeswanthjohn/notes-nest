@@ -84,12 +84,14 @@ function deleteNote(id) {
 /* -------------------- UI -------------------- */
 
 function renderNotes() {
-  notesContainer.innerHTML = "";
+  notesContainer.querySelectorAll(".note").forEach(n => n.remove());
 
   if (notes.length === 0) {
-    notesContainer.innerHTML = `<p>No notes yet.</p>`;
+    emptyState.classList.remove("hidden");
     return;
   }
+
+  emptyState.classList.add("hidden");
 
   const fragment = document.createDocumentFragment();
 
@@ -152,6 +154,9 @@ notesContainer.addEventListener("click", e => {
   if (!action || !id) return;
 
   if (action === "delete") {
+    const confirmed = confirm("Are you sure you want to delete this note?");
+    if (!confirmed) return;
+
     deleteNote(id);
   }
 
