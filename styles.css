@@ -123,3 +123,8 @@ button:disabled {
   font-size: 0.9rem;
   margin-top: 1.5rem;
 }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
