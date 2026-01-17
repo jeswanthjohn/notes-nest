@@ -25,6 +25,12 @@ The focus is on **predictable state updates, separation of concerns, and defensi
 - Event delegation for dynamic elements
 
 ---
+## ✨ Key UX Decisions
+
+- Implemented a clear empty state to guide users when no notes are present, improving first-use experience.
+- Added confirmation before deleting notes to prevent accidental data loss.
+
+---
 
 ## 🧠 Engineering Decisions
 
