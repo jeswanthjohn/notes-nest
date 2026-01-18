@@ -25,26 +25,31 @@ The focus is on **predictable state updates, separation of concerns, and defensi
 - Event delegation for dynamic elements
 
 ---
+
 ## ✨ Key UX Decisions
 
-- Implemented a clear empty state to guide users when no notes are present, improving first-use experience.
-- Added confirmation before deleting notes to prevent accidental data loss.
+- Implemented a clear empty state to guide users when no notes are present, improving first-use experience
+- Added confirmation before deleting notes to prevent accidental data loss
 
 ---
 
 ## 🧠 Engineering Decisions
 
-### 1. State Management
+### State Management
+
 - Notes are managed via a **single source of truth**
 - All mutations go through a centralized `setNotes()` function
 - Prevents inconsistent UI and scattered state changes
 
-### 2. Event Delegation
+### Event Delegation
+
 - Dynamic actions (edit/delete) are handled using event delegation
 - Avoids inline event handlers and improves scalability
 
-### 3. Data Modeling
-Each note follows a predictable schema:
+### Data Modeling
+
+Each note follows a predictable schema.
+
 ```js
 {
   id: string,
@@ -52,70 +57,78 @@ Each note follows a predictable schema:
   createdAt: number,
   updatedAt: number
 }
-Timestamps are stored as numbers, not formatted strings
+```
 
-Formatting is handled only at render time
+- Timestamps are stored as numbers, not formatted strings
+- Formatting is handled only at render time
 
-### 4. Persistence Strategy
+### Persistence Strategy
 
-localStorage is used to keep the app fully client-side
+- `localStorage` is used to keep the app fully client-side
+- Stored data is validated before use
+- Corrupted data is safely discarded to avoid runtime errors
 
-Stored data is validated before use
+---
 
-Corrupted data is safely discarded to avoid runtime errors
+## 🛠️ Tech Stack
 
-🛠️ Tech Stack
+- HTML5 (semantic markup)
+- CSS3 (responsive layout, interaction states)
+- Vanilla JavaScript (ES6+)
+- Browser localStorage API
+- Git & GitHub
+- Netlify (deployment)
 
-HTML5 (semantic markup)
+---
 
-CSS3 (responsive layout, interaction states)
+## 📂 Project Structure
 
-Vanilla JavaScript (ES6+)
-
-Browser localStorage API
-
-Git & GitHub
-
-Netlify (deployment)
-
-📂 Project Structure
+```text
 /
 ├── index.html     # Semantic, accessible markup
 ├── styles.css     # Responsive styling
 ├── app.js         # State, logic, and UI handling
 └── README.md
+```
 
-⚠️ Known Limitations
+---
 
-No authentication or cloud sync (intentionally out of scope)
+## ⚠️ Known Limitations
 
-Data is browser-specific
+- No authentication or cloud sync (intentionally out of scope)
+- Data is browser-specific
+- Designed for learning and demonstration, not production use
 
-Designed for learning and demonstration, not production use
+---
 
-🎯 Learning Outcomes
+## 🎯 Learning Outcomes
 
-Managing application state without frameworks
-
-Implementing CRUD patterns in vanilla JavaScript
-
-Using event delegation for dynamic DOM elements
-
-Persisting and validating client-side data
-
-Writing defensive, readable frontend code
-
+- Managing application state without frameworks
+- Implementing CRUD patterns in vanilla JavaScript
+- Using event delegation for dynamic DOM elements
+- Persisting and validating client-side data
+- Writing defensive, readable frontend code
 - Supporting keyboard-first interactions (Enter to add/save, Esc to cancel edits)
-
 - Providing clear interaction feedback by disabling actions when input is invalid
 
+---
 
-📌 Status
+## 📌 Status
 
-✅ Feature complete
-✅ Refactored for clarity and maintainability
-✅ Deployed and production-ready (frontend scope)
+- ✅ Feature complete
+- ✅ Refactored for clarity and maintainability
+- ✅ Deployed and production-ready (frontend scope)
 
-📬 Feedback
+---
+
+## 👤 Author
+
+**Jeswanth Reddy**  
+Full Stack Developer (JavaScript, React, Node.js)  
+GitHub: https://github.com/jeswanthjohn
+
+---
+
+## 📬 Feedback
 
 Suggestions and improvements are welcome.
