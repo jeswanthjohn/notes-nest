@@ -52,14 +52,23 @@ function setNotes(newNotes) {
   renderNotes();
 }
 
+/* -------------------- INPUT VALIDATION -------------------- */
+
+function normalizeInput(text) {
+  return text.trim().replace(/\s+/g, " ");
+}
+
 /* -------------------- CRUD OPERATIONS -------------------- */
 
 function addNote(content) {
+  const normalized = normalizeInput(content);
+  if (!normalized) return;
+
   const now = Date.now();
 
   const note = {
     id: crypto.randomUUID(),
-    content,
+    content: normalized,
     createdAt: now,
     updatedAt: now
   };
@@ -68,9 +77,12 @@ function addNote(content) {
 }
 
 function updateNote(id, content) {
+  const normalized = normalizeInput(content);
+  if (!normalized) return;
+
   const updated = notes.map(note =>
     note.id === id
-      ? { ...note, content, updatedAt: Date.now() }
+      ? { ...note, content: normalized, updatedAt: Date.now() }
       : note
   );
 
@@ -151,14 +163,13 @@ function exitEditMode() {
 /* -------------------- VISUAL FEEDBACK -------------------- */
 
 function updateAddButtonState() {
-  addBtn.disabled = noteInput.value.trim() === "";
+  addBtn.disabled = normalizeInput(noteInput.value) === "";
 }
 
 /* -------------------- EVENTS -------------------- */
 
 addBtn.addEventListener("click", () => {
-  const text = noteInput.value.trim();
-  if (!text) return;
+  const text = noteInput.value;
 
   if (editingNoteId) {
     updateNote(editingNoteId, text);
