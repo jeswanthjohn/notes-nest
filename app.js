@@ -1,4 +1,5 @@
 import { loadNotes, saveNotes } from "./storage.js";
+import { renderNote } from "./noteRenderer.js";
 
 /* -------------------- STATE -------------------- */
 
@@ -84,28 +85,8 @@ function renderNotes() {
   const fragment = document.createDocumentFragment();
 
   notes.forEach(note => {
-    const div = document.createElement("div");
-    div.className = "note";
-    div.setAttribute("role", "listitem");
-
-    div.innerHTML = `
-      <p>${escapeHTML(note.content)}</p>
-      <div class="note-footer">
-        <small aria-label="Last updated ${formatDate(note.updatedAt)}">
-          ${formatDate(note.updatedAt)}
-        </small>
-        <div class="note-actions">
-          <button data-action="edit" data-id="${note.id}">
-            Edit
-          </button>
-          <button data-action="delete" data-id="${note.id}" class="delete">
-            Delete
-          </button>
-        </div>
-      </div>
-    `;
-
-    fragment.appendChild(div);
+    const noteElement = renderNote(note, formatDate, escapeHTML);
+    fragment.appendChild(noteElement);
   });
 
   notesContainer.appendChild(fragment);
@@ -140,10 +121,37 @@ noteInput.addEventListener("input", () => {
   updateAddButtonState();
 });
 
+notesContainer.addEventListener("click", e => {
+  const action = e.target.dataset.action;
+  const id = e.target.dataset.id;
+
+  if (!action || !id) return;
+
+  if (action === "delete") {
+    const confirmed = confirm("Are you sure you want to delete this note?");
+    if (!confirmed) return;
+
+    deleteNote(id);
+  }
+
+  if (action === "edit") {
+    const note = notes.find(n => n.id === id);
+    if (note) enterEditMode(note);
+  }
+});
+
 /* -------------------- HELPERS -------------------- */
 
 function updateAddButtonState() {
   addBtn.disabled = normalizeInput(noteInput.value) === "";
+}
+
+function enterEditMode(note) {
+  editingNoteId = note.id;
+  noteInput.value = note.content;
+  addBtn.textContent = "Save";
+  cancelBtn.classList.remove("hidden");
+  updateAddButtonState();
 }
 
 function exitEditMode() {
