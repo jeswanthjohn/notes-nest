@@ -5,6 +5,8 @@ import { loadNotes, saveNotes } from "./storage.js";
 let notes = [];
 let editingNoteId = null;
 
+const MAX_NOTE_LENGTH = 500;
+
 /* -------------------- DOM -------------------- */
 
 const noteInput = document.getElementById("noteInput");
@@ -12,6 +14,7 @@ const addBtn = document.getElementById("addBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const notesContainer = document.getElementById("notesContainer");
 const emptyState = document.getElementById("emptyState");
+const charCount = document.getElementById("charCount");
 
 /* -------------------- STATE API -------------------- */
 
@@ -25,6 +28,10 @@ function setNotes(newNotes) {
 
 function normalizeInput(text) {
   return text.trim().replace(/\s+/g, " ");
+}
+
+function enforceMaxLength(text) {
+  return text.slice(0, MAX_NOTE_LENGTH);
 }
 
 /* -------------------- CRUD OPERATIONS -------------------- */
@@ -88,19 +95,10 @@ function renderNotes() {
           ${formatDate(note.updatedAt)}
         </small>
         <div class="note-actions">
-          <button 
-            data-action="edit" 
-            data-id="${note.id}" 
-            aria-label="Edit note"
-          >
+          <button data-action="edit" data-id="${note.id}">
             Edit
           </button>
-          <button 
-            data-action="delete" 
-            data-id="${note.id}" 
-            class="delete"
-            aria-label="Delete note"
-          >
+          <button data-action="delete" data-id="${note.id}" class="delete">
             Delete
           </button>
         </div>
@@ -113,26 +111,9 @@ function renderNotes() {
   notesContainer.appendChild(fragment);
 }
 
-function enterEditMode(note) {
-  editingNoteId = note.id;
-  noteInput.value = note.content;
-  addBtn.textContent = "Save";
-  cancelBtn.classList.remove("hidden");
-  updateAddButtonState();
-}
-
-function exitEditMode() {
-  editingNoteId = null;
-  noteInput.value = "";
-  addBtn.textContent = "Add Note";
-  cancelBtn.classList.add("hidden");
-  updateAddButtonState();
-}
-
-/* -------------------- VISUAL FEEDBACK -------------------- */
-
-function updateAddButtonState() {
-  addBtn.disabled = normalizeInput(noteInput.value) === "";
+function updateCharacterCounter() {
+  const length = noteInput.value.length;
+  charCount.textContent = length;
 }
 
 /* -------------------- EVENTS -------------------- */
@@ -146,47 +127,32 @@ addBtn.addEventListener("click", () => {
   } else {
     addNote(text);
     noteInput.value = "";
+    updateCharacterCounter();
     updateAddButtonState();
   }
 });
 
 cancelBtn.addEventListener("click", exitEditMode);
 
-/* -------------------- KEYBOARD INTERACTIONS -------------------- */
-
-noteInput.addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    addBtn.click();
-  }
-
-  if (e.key === "Escape" && editingNoteId) {
-    exitEditMode();
-  }
-});
-
-noteInput.addEventListener("input", updateAddButtonState);
-
-notesContainer.addEventListener("click", e => {
-  const action = e.target.dataset.action;
-  const id = e.target.dataset.id;
-
-  if (!action || !id) return;
-
-  if (action === "delete") {
-    const confirmed = confirm("Are you sure you want to delete this note?");
-    if (!confirmed) return;
-
-    deleteNote(id);
-  }
-
-  if (action === "edit") {
-    const note = notes.find(n => n.id === id);
-    if (note) enterEditMode(note);
-  }
+noteInput.addEventListener("input", () => {
+  noteInput.value = enforceMaxLength(noteInput.value);
+  updateCharacterCounter();
+  updateAddButtonState();
 });
 
 /* -------------------- HELPERS -------------------- */
+
+function updateAddButtonState() {
+  addBtn.disabled = normalizeInput(noteInput.value) === "";
+}
+
+function exitEditMode() {
+  editingNoteId = null;
+  noteInput.value = "";
+  addBtn.textContent = "Add Note";
+  cancelBtn.classList.add("hidden");
+  updateCharacterCounter();
+}
 
 function formatDate(timestamp) {
   return new Date(timestamp).toLocaleString();
@@ -203,3 +169,4 @@ function escapeHTML(str) {
 notes = loadNotes();
 renderNotes();
 updateAddButtonState();
+updateCharacterCounter();

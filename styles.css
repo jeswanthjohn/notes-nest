@@ -39,6 +39,15 @@ textarea {
   font-size: 0.95rem;
 }
 
+/* Character Counter */
+
+.char-counter {
+  font-size: 0.75rem;
+  color: #777;
+  text-align: right;
+  margin-top: 0.3rem;
+}
+
 .actions {
   margin-top: 0.6rem;
   display: flex;
@@ -129,15 +138,11 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Accessibility improvement: visible keyboard focus */
-
 button:focus,
 textarea:focus {
   outline: 2px solid #0056b3;
   outline-offset: 2px;
 }
-
-/* Screen reader only text */
 
 .visually-hidden {
   position: absolute;
