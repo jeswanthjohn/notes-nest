@@ -1,9 +1,9 @@
+import { loadNotes, saveNotes } from "./storage.js";
+
 /* -------------------- STATE -------------------- */
 
 let notes = [];
 let editingNoteId = null;
-
-const STORAGE_KEY = "notes-app-data";
 
 /* -------------------- DOM -------------------- */
 
@@ -12,37 +12,6 @@ const addBtn = document.getElementById("addBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const notesContainer = document.getElementById("notesContainer");
 const emptyState = document.getElementById("emptyState");
-
-/* -------------------- STORAGE -------------------- */
-
-function loadNotes() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) throw new Error("Invalid data");
-
-    return parsed.filter(isValidNote);
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-    return [];
-  }
-}
-
-function saveNotes(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function isValidNote(note) {
-  return (
-    typeof note === "object" &&
-    typeof note.id === "string" &&
-    typeof note.content === "string" &&
-    typeof note.createdAt === "number" &&
-    typeof note.updatedAt === "number"
-  );
-}
 
 /* -------------------- STATE API -------------------- */
 
