@@ -14,17 +14,32 @@
       <p class="subtitle">Simple, fast, and persistent notes</p>
     </header>
 
-    <section class="editor">
+    <section class="editor" aria-labelledby="editorHeading">
+      <h2 id="editorHeading" class="visually-hidden">Note editor</h2>
+
       <label for="noteInput">Note</label>
+
       <textarea
         id="noteInput"
         placeholder="Write your note..."
-        aria-label="Note content"
+        aria-label="Write your note here"
       ></textarea>
 
       <div class="actions">
-        <button id="addBtn">Add Note</button>
-        <button id="cancelBtn" class="secondary hidden">Cancel</button>
+        <button
+          id="addBtn"
+          aria-label="Add note"
+        >
+          Add Note
+        </button>
+
+        <button
+          id="cancelBtn"
+          class="secondary hidden"
+          aria-label="Cancel editing note"
+        >
+          Cancel
+        </button>
       </div>
     </section>
 
@@ -32,6 +47,8 @@
       id="notesContainer"
       class="notes"
       aria-live="polite"
+      role="list"
+      aria-label="Saved notes"
     >
       <p id="emptyState" class="empty-state hidden">
         No notes yet. Add your first note to get started.

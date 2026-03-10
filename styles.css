@@ -128,3 +128,24 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Accessibility improvement: visible keyboard focus */
+
+button:focus,
+textarea:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* Screen reader only text */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
