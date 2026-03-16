@@ -1,6 +1,6 @@
 # 📝 Notes App
 
-A lightweight, client-side Notes application built with **Vanilla JavaScript**, focused on clean state management, predictable UI behavior, and defensive handling of browser storage.
+A lightweight, client-side notes application built with **Vanilla JavaScript**, focused on clean state management, predictable UI behavior, and defensive handling of browser storage.
 
 🔗 **Live Demo:** [https://notes-nest-jeswanth.netlify.app](https://notes-nest-jeswanth.netlify.app)
 
@@ -11,6 +11,48 @@ A lightweight, client-side Notes application built with **Vanilla JavaScript**, 
 This project is a **frontend CRUD application** built without frameworks to practice core JavaScript fundamentals as they are applied in real-world interfaces.
 
 The emphasis is on **clarity of state flow, separation of concerns, accessibility, and correctness**, rather than feature quantity or visual complexity.
+
+---
+---
+
+## 🏗️ Architecture Overview
+
+The application follows a simple modular architecture where **state management, rendering, and persistence are intentionally separated**.
+
+```text
+User Interaction
+      │
+      ▼
+   app.js
+(State + UI Logic)
+      │
+      ├── storage.js
+      │   Handles persistence using localStorage
+      │
+      └── noteRenderer.js
+          Responsible for rendering note UI components
+```
+
+## Module Responsibilities
+
+### app.js
+- Central application controller
+- Manages state (notes)
+- Handles input validation
+- Coordinates rendering and persistence
+- Implements event delegation for note actions
+
+### storage.js
+- Handles all interaction with localStorage
+- Validates stored data before loading
+- Ensures corrupted storage does not break the app
+
+### noteRenderer.js
+- Encapsulates DOM creation for notes
+- Keeps rendering logic separate from application state
+- Improves maintainability and testability
+
+**This separation keeps the codebase predictable, easier to reason about, and safer to extend.**
 
 ---
 
