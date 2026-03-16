@@ -121,9 +121,16 @@ noteInput.addEventListener("input", () => {
   updateAddButtonState();
 });
 
+/* Event Delegation for Note Actions */
+
 notesContainer.addEventListener("click", e => {
-  const action = e.target.dataset.action;
-  const id = e.target.dataset.id;
+
+  const actionButton = e.target.closest("button[data-action]");
+
+  if (!actionButton) return;
+
+  const action = actionButton.dataset.action;
+  const id = actionButton.dataset.id;
 
   if (!action || !id) return;
 
