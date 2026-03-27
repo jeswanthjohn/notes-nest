@@ -1,7 +1,11 @@
-export function renderNote(note, formatDate, escapeHTML) {
+export function renderNote(note, formatDate, escapeHTML, isEditing = false) {
   const div = document.createElement("div");
   div.className = "note";
   div.setAttribute("role", "listitem");
+
+  if (isEditing) {
+    div.classList.add("editing"); // ✅ visual indicator
+  }
 
   div.innerHTML = `
     <p>${escapeHTML(note.content)}</p>

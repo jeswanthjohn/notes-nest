@@ -20,7 +20,7 @@ const charCount = document.getElementById("charCount");
 /* -------------------- STATE API -------------------- */
 
 function setNotes(newNotes) {
-  notes = sanitizeNotes(newNotes); // ✅ defensive validation
+  notes = sanitizeNotes(newNotes);
   saveNotes(notes);
   renderNotes();
 }
@@ -73,7 +73,7 @@ function updateNote(id, content) {
   if (!normalized) return;
 
   const exists = notes.some(n => n.id === id);
-  if (!exists) return; // ✅ prevent stale edit
+  if (!exists) return;
 
   const updated = notes.map(note =>
     note.id === id
@@ -86,12 +86,12 @@ function updateNote(id, content) {
 
 function deleteNote(id) {
   const exists = notes.some(n => n.id === id);
-  if (!exists) return; // ✅ prevent invalid delete
+  if (!exists) return;
 
   setNotes(notes.filter(note => note.id !== id));
 
   if (editingNoteId === id) {
-    exitEditMode(); // ✅ fix edit-state bug
+    exitEditMode();
   }
 }
 
@@ -110,7 +110,12 @@ function renderNotes() {
   const fragment = document.createDocumentFragment();
 
   notes.forEach(note => {
-    const noteElement = renderNote(note, formatDate, escapeHTML);
+    const noteElement = renderNote(
+      note,
+      formatDate,
+      escapeHTML,
+      note.id === editingNoteId // ✅ pass edit state
+    );
     fragment.appendChild(noteElement);
   });
 
@@ -146,11 +151,10 @@ noteInput.addEventListener("input", () => {
   updateAddButtonState();
 });
 
-/* Event Delegation for Note Actions */
+/* Event Delegation */
 
 notesContainer.addEventListener("click", e => {
   const actionButton = e.target.closest("button[data-action]");
-
   if (!actionButton) return;
 
   const action = actionButton.dataset.action;
@@ -167,7 +171,17 @@ notesContainer.addEventListener("click", e => {
 
   if (action === "edit") {
     const note = notes.find(n => n.id === id);
-    if (note) enterEditMode(note);
+    if (!note) return;
+
+    // ✅ Prevent switching mid-edit
+    if (editingNoteId && editingNoteId !== id) {
+      const confirmSwitch = confirm(
+        "You have an unsaved edit. Discard and edit another note?"
+      );
+      if (!confirmSwitch) return;
+    }
+
+    enterEditMode(note);
   }
 });
 
@@ -179,18 +193,26 @@ function updateAddButtonState() {
 
 function enterEditMode(note) {
   editingNoteId = note.id;
+
   noteInput.value = note.content;
   addBtn.textContent = "Save";
   cancelBtn.classList.remove("hidden");
+
+  updateCharacterCounter();
   updateAddButtonState();
+  renderNotes(); // ✅ reflect UI state
 }
 
 function exitEditMode() {
   editingNoteId = null;
+
   noteInput.value = "";
   addBtn.textContent = "Add Note";
   cancelBtn.classList.add("hidden");
+
   updateCharacterCounter();
+  updateAddButtonState();
+  renderNotes(); // ✅ remove highlight
 }
 
 function formatDate(timestamp) {
@@ -206,7 +228,7 @@ function escapeHTML(str) {
 /* -------------------- INIT -------------------- */
 
 try {
-  notes = sanitizeNotes(loadNotes()); // ✅ extra safety layer
+  notes = sanitizeNotes(loadNotes());
 } catch (err) {
   console.error("Failed to initialize notes:", err);
   notes = [];
