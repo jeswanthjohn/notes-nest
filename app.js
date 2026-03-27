@@ -181,7 +181,13 @@ function escapeHTML(str) {
 
 /* -------------------- INIT -------------------- */
 
-notes = loadNotes();
+try {
+  notes = loadNotes();
+} catch (err) {
+  console.error("Failed to initialize notes:", err);
+  notes = [];
+}
+
 renderNotes();
 updateAddButtonState();
 updateCharacterCounter();

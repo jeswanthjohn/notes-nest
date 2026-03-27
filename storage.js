@@ -22,14 +22,32 @@ export function loadNotes() {
 
     if (!raw) return [];
 
-    const parsed = JSON.parse(raw);
+    let parsed;
 
-    if (!Array.isArray(parsed)) throw new Error("Invalid notes structure");
+    try {
+      parsed = JSON.parse(raw);
+    } catch (parseErr) {
+      console.warn("Invalid JSON in storage. Resetting notes.");
+      localStorage.removeItem(STORAGE_KEY);
+      return [];
+    }
 
-    return parsed.filter(isValidNote);
+    if (!Array.isArray(parsed)) {
+      console.warn("Unexpected storage format. Resetting notes.");
+      localStorage.removeItem(STORAGE_KEY);
+      return [];
+    }
+
+    const validNotes = parsed.filter(isValidNote);
+
+    if (validNotes.length !== parsed.length) {
+      console.warn("Invalid note entries detected. Cleaning storage.");
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(validNotes));
+    }
+
+    return validNotes;
   } catch (err) {
-    console.warn("Corrupted notes storage detected. Resetting storage.");
-    localStorage.removeItem(STORAGE_KEY);
+    console.error("Failed to access localStorage:", err);
     return [];
   }
 }
@@ -41,5 +59,8 @@ export function saveNotes(notes) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
   } catch (err) {
     console.error("Failed to save notes:", err);
+
+    // Optional UX-safe fallback signal
+    alert("Unable to save notes. Storage may be full or restricted.");
   }
 }
