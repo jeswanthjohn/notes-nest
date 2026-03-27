@@ -20,9 +20,24 @@ const charCount = document.getElementById("charCount");
 /* -------------------- STATE API -------------------- */
 
 function setNotes(newNotes) {
-  notes = newNotes;
+  notes = sanitizeNotes(newNotes); // ✅ defensive validation
   saveNotes(notes);
   renderNotes();
+}
+
+/* -------------------- VALIDATION -------------------- */
+
+function sanitizeNotes(input) {
+  if (!Array.isArray(input)) return [];
+
+  return input.filter(
+    n =>
+      n &&
+      typeof n.id === "string" &&
+      typeof n.content === "string" &&
+      typeof n.createdAt === "number" &&
+      typeof n.updatedAt === "number"
+  );
 }
 
 /* -------------------- INPUT VALIDATION -------------------- */
@@ -57,6 +72,9 @@ function updateNote(id, content) {
   const normalized = normalizeInput(content);
   if (!normalized) return;
 
+  const exists = notes.some(n => n.id === id);
+  if (!exists) return; // ✅ prevent stale edit
+
   const updated = notes.map(note =>
     note.id === id
       ? { ...note, content: normalized, updatedAt: Date.now() }
@@ -67,7 +85,14 @@ function updateNote(id, content) {
 }
 
 function deleteNote(id) {
+  const exists = notes.some(n => n.id === id);
+  if (!exists) return; // ✅ prevent invalid delete
+
   setNotes(notes.filter(note => note.id !== id));
+
+  if (editingNoteId === id) {
+    exitEditMode(); // ✅ fix edit-state bug
+  }
 }
 
 /* -------------------- UI -------------------- */
@@ -124,7 +149,6 @@ noteInput.addEventListener("input", () => {
 /* Event Delegation for Note Actions */
 
 notesContainer.addEventListener("click", e => {
-
   const actionButton = e.target.closest("button[data-action]");
 
   if (!actionButton) return;
@@ -182,7 +206,7 @@ function escapeHTML(str) {
 /* -------------------- INIT -------------------- */
 
 try {
-  notes = loadNotes();
+  notes = sanitizeNotes(loadNotes()); // ✅ extra safety layer
 } catch (err) {
   console.error("Failed to initialize notes:", err);
   notes = [];
