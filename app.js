@@ -56,6 +56,13 @@ function addNote(content) {
   const normalized = normalizeInput(content);
   if (!normalized) return;
 
+  // ✅ Prevent duplicate notes
+  const isDuplicate = notes.some(n => n.content === normalized);
+  if (isDuplicate) {
+    alert("Duplicate note detected. Please enter unique content.");
+    return;
+  }
+
   const now = Date.now();
 
   const note = {
@@ -74,6 +81,15 @@ function updateNote(id, content) {
 
   const exists = notes.some(n => n.id === id);
   if (!exists) return;
+
+  // ✅ Prevent duplicate during edit (excluding current note)
+  const isDuplicate = notes.some(
+    n => n.content === normalized && n.id !== id
+  );
+  if (isDuplicate) {
+    alert("Duplicate note detected. Please enter unique content.");
+    return;
+  }
 
   const updated = notes.map(note =>
     note.id === id
@@ -184,7 +200,7 @@ notesContainer.addEventListener("click", e => {
   }
 });
 
-/* -------------------- STORAGE SYNC (NEW) -------------------- */
+/* -------------------- STORAGE SYNC -------------------- */
 
 window.addEventListener("storage", event => {
   if (event.key !== "notes-app-data") return;
@@ -192,12 +208,10 @@ window.addEventListener("storage", event => {
   try {
     const updatedNotes = sanitizeNotes(loadNotes());
 
-    // Avoid unnecessary re-render
     if (JSON.stringify(updatedNotes) === JSON.stringify(notes)) return;
 
     notes = updatedNotes;
 
-    // If currently editing, exit to avoid stale UI
     if (editingNoteId) {
       exitEditMode();
     } else {
