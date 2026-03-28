@@ -114,7 +114,7 @@ function renderNotes() {
       note,
       formatDate,
       escapeHTML,
-      note.id === editingNoteId // ✅ pass edit state
+      note.id === editingNoteId
     );
     fragment.appendChild(noteElement);
   });
@@ -173,7 +173,6 @@ notesContainer.addEventListener("click", e => {
     const note = notes.find(n => n.id === id);
     if (!note) return;
 
-    // ✅ Prevent switching mid-edit
     if (editingNoteId && editingNoteId !== id) {
       const confirmSwitch = confirm(
         "You have an unsaved edit. Discard and edit another note?"
@@ -182,6 +181,31 @@ notesContainer.addEventListener("click", e => {
     }
 
     enterEditMode(note);
+  }
+});
+
+/* -------------------- STORAGE SYNC (NEW) -------------------- */
+
+window.addEventListener("storage", event => {
+  if (event.key !== "notes-app-data") return;
+
+  try {
+    const updatedNotes = sanitizeNotes(loadNotes());
+
+    // Avoid unnecessary re-render
+    if (JSON.stringify(updatedNotes) === JSON.stringify(notes)) return;
+
+    notes = updatedNotes;
+
+    // If currently editing, exit to avoid stale UI
+    if (editingNoteId) {
+      exitEditMode();
+    } else {
+      renderNotes();
+    }
+
+  } catch (err) {
+    console.error("Failed to sync notes across tabs:", err);
   }
 });
 
@@ -200,7 +224,7 @@ function enterEditMode(note) {
 
   updateCharacterCounter();
   updateAddButtonState();
-  renderNotes(); // ✅ reflect UI state
+  renderNotes();
 }
 
 function exitEditMode() {
@@ -212,7 +236,7 @@ function exitEditMode() {
 
   updateCharacterCounter();
   updateAddButtonState();
-  renderNotes(); // ✅ remove highlight
+  renderNotes();
 }
 
 function formatDate(timestamp) {
