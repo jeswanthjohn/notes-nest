@@ -117,6 +117,67 @@ Each note follows a strict, predictable schema:
 
 ---
 
+
+
+## ⚙️ Edge Case Handling
+
+The application includes additional safeguards to handle real-world usage scenarios beyond basic CRUD operations.
+
+### Storage Reliability
+
+* Wrapped all `localStorage` interactions in safe access patterns
+* Handles cases where storage is unavailable (e.g., private mode, quota limits)
+* Prevents application crashes due to storage failures
+
+### Data Integrity
+
+* All persisted data is validated at both storage and application layers
+* Invalid or partially corrupted entries are filtered out safely
+* Ensures UI is always rendered from a trusted state
+
+### Edit State Consistency
+
+* Prevents multiple concurrent edit sessions
+* Guards against stale references during update and delete operations
+* Ensures edit mode exits cleanly when underlying data changes
+
+### Multi-Tab Synchronization
+
+* Uses the browser `storage` event to sync notes across multiple tabs
+* Automatically updates UI when changes occur in another session
+* Prevents stale or conflicting state across tabs
+
+### Duplicate Prevention
+
+* Prevents creation of duplicate notes based on normalized content
+* Applies validation during both creation and editing flows
+* Maintains data quality without introducing unnecessary complexity
+
+---
+
+## ⚖️ Trade-offs and Design Choices
+
+* Duplicate detection uses exact string matching after normalization  
+  → avoids performance overhead of fuzzy comparison
+
+* Multi-tab synchronization exits edit mode on external updates  
+  → prioritizes consistency over preserving unsaved local edits
+
+* Validation is implemented in both storage and application layers  
+  → adds slight redundancy but improves robustness
+
+* No debouncing or rate-limiting added for input actions  
+  → kept intentionally simple for a single-user frontend context
+
+  ---
+
+## 🔮 Potential Improvements
+
+* Optimistic UI updates with rollback handling for future backend integration
+* IndexedDB support for handling larger datasets beyond localStorage limits
+* Basic search and filtering for improved note retrieval
+* Optional sync strategy for cross-device persistence (if backend is introduced)
+
 ## 🚫 Non-goals
 
 The following were intentionally excluded to keep the project focused:
