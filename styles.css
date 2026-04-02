@@ -39,7 +39,7 @@ textarea {
   font-size: 0.95rem;
 }
 
-/* Character Counter */
+
 
 .char-counter {
   font-size: 0.75rem;
@@ -153,4 +153,20 @@ textarea:focus {
   overflow: hidden;
   clip: rect(0,0,0,0);
   border: 0;
+}
+
+.search {
+  margin-bottom: 1rem;
+}
+
+.search label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.search input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
 }

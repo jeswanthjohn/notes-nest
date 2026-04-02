@@ -14,6 +14,19 @@
       <p class="subtitle">Simple, fast, and persistent notes</p>
     </header>
 
+    <!-- 🔥 NEW: Search Section -->
+    <section class="search" aria-labelledby="searchHeading">
+      <h2 id="searchHeading" class="visually-hidden">Search notes</h2>
+
+      <label for="searchInput">Search</label>
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search notes..."
+        aria-label="Search notes"
+      />
+    </section>
+
     <section class="editor" aria-labelledby="editorHeading">
       <h2 id="editorHeading" class="visually-hidden">Note editor</h2>
 
@@ -31,10 +44,7 @@
       </div>
 
       <div class="actions">
-        <button
-          id="addBtn"
-          aria-label="Add note"
-        >
+        <button id="addBtn" aria-label="Add note">
           Add Note
         </button>
 
