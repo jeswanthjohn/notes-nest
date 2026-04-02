@@ -5,6 +5,7 @@ import { renderNote } from "./noteRenderer.js";
 
 let notes = [];
 let editingNoteId = null;
+let searchQuery = ""; //  search state
 
 const MAX_NOTE_LENGTH = 500;
 
@@ -16,6 +17,7 @@ const cancelBtn = document.getElementById("cancelBtn");
 const notesContainer = document.getElementById("notesContainer");
 const emptyState = document.getElementById("emptyState");
 const charCount = document.getElementById("charCount");
+const searchInput = document.getElementById("searchInput"); 
 
 /* -------------------- STATE API -------------------- */
 
@@ -56,7 +58,6 @@ function addNote(content) {
   const normalized = normalizeInput(content);
   if (!normalized) return;
 
-  // ✅ Prevent duplicate notes
   const isDuplicate = notes.some(n => n.content === normalized);
   if (isDuplicate) {
     alert("Duplicate note detected. Please enter unique content.");
@@ -82,7 +83,6 @@ function updateNote(id, content) {
   const exists = notes.some(n => n.id === id);
   if (!exists) return;
 
-  // ✅ Prevent duplicate during edit (excluding current note)
   const isDuplicate = notes.some(
     n => n.content === normalized && n.id !== id
   );
@@ -111,12 +111,26 @@ function deleteNote(id) {
   }
 }
 
+/* -------------------- SEARCH  -------------------- */
+
+function getFilteredNotes() {
+  if (!searchQuery) return notes;
+
+  const query = searchQuery.toLowerCase();
+
+  return notes.filter(note =>
+    note.content.toLowerCase().includes(query)
+  );
+}
+
 /* -------------------- UI -------------------- */
 
 function renderNotes() {
   notesContainer.querySelectorAll(".note").forEach(n => n.remove());
 
-  if (notes.length === 0) {
+  const filteredNotes = getFilteredNotes(); 
+
+  if (filteredNotes.length === 0) {
     emptyState.classList.remove("hidden");
     return;
   }
@@ -125,7 +139,7 @@ function renderNotes() {
 
   const fragment = document.createDocumentFragment();
 
-  notes.forEach(note => {
+  filteredNotes.forEach(note => {
     const noteElement = renderNote(
       note,
       formatDate,
@@ -166,6 +180,15 @@ noteInput.addEventListener("input", () => {
   updateCharacterCounter();
   updateAddButtonState();
 });
+
+/*  Search input event */
+
+if (searchInput) {
+  searchInput.addEventListener("input", e => {
+    searchQuery = e.target.value.trim();
+    renderNotes();
+  });
+}
 
 /* Event Delegation */
 
