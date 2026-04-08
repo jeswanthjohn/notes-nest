@@ -58,6 +58,8 @@ User Interaction
 
 ## ✨ Features
 
+* Real-time note filtering based on search query
+* Instant UI updates while typing in search input
 * Create, edit, and delete notes (full CRUD lifecycle)
 * Persistent storage using the browser’s `localStorage`
 * Explicit edit mode with save and cancel flow
@@ -80,6 +82,12 @@ User Interaction
 ---
 
 ## 🧠 Engineering Decisions
+
+### Search and Filtering
+
+* Implemented real-time filtering using input-driven state updates
+* Avoids unnecessary re-renders by deriving filtered results from existing state
+* Keeps original data intact and applies filtering only at render level
 
 ### State Management
 
@@ -206,7 +214,7 @@ The following were intentionally excluded to keep the project focused:
 /
 ├── index.html     # Semantic, accessible markup
 ├── styles.css     # Responsive styling and visual feedback
-├── app.js         # State management, logic, and UI behavior
+├── app.js         # State management, UI logic, and search/filter handling
 └── README.md
 ```
 
