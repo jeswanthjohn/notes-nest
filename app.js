@@ -8,13 +8,15 @@ import {
   escapeHTML
 } from "./utils.js";
 
+import { MAX_NOTE_LENGTH } from "./config.js";
+
+import { sanitizeNotes } from "./validation.js";
+
 /* -------------------- STATE -------------------- */
 
 let notes = [];
 let editingNoteId = null;
 let searchQuery = "";
-
-const MAX_NOTE_LENGTH = 500;
 
 /* -------------------- DOM -------------------- */
 
@@ -30,23 +32,10 @@ const searchInput = document.getElementById("searchInput");
 
 function setNotes(newNotes) {
   notes = sanitizeNotes(newNotes);
+
   saveNotes(notes);
+
   renderNotes();
-}
-
-/* -------------------- VALIDATION -------------------- */
-
-function sanitizeNotes(input) {
-  if (!Array.isArray(input)) return [];
-
-  return input.filter(
-    n =>
-      n &&
-      typeof n.id === "string" &&
-      typeof n.content === "string" &&
-      typeof n.createdAt === "number" &&
-      typeof n.updatedAt === "number"
-  );
 }
 
 /* -------------------- CRUD OPERATIONS -------------------- */
@@ -56,10 +45,15 @@ function addNote(content) {
 
   if (!normalized) return;
 
-  const isDuplicate = notes.some(n => n.content === normalized);
+  const isDuplicate = notes.some(
+    n => n.content === normalized
+  );
 
   if (isDuplicate) {
-    alert("Duplicate note detected. Please enter unique content.");
+    alert(
+      "Duplicate note detected. Please enter unique content."
+    );
+
     return;
   }
 
@@ -89,7 +83,10 @@ function updateNote(id, content) {
   );
 
   if (isDuplicate) {
-    alert("Duplicate note detected. Please enter unique content.");
+    alert(
+      "Duplicate note detected. Please enter unique content."
+    );
+
     return;
   }
 
@@ -133,7 +130,9 @@ function getFilteredNotes() {
 /* -------------------- UI -------------------- */
 
 function renderNotes() {
-  notesContainer.querySelectorAll(".note").forEach(n => n.remove());
+  notesContainer
+    .querySelectorAll(".note")
+    .forEach(n => n.remove());
 
   const filteredNotes = getFilteredNotes();
 
@@ -162,6 +161,7 @@ function renderNotes() {
 
 function updateCharacterCounter() {
   const length = noteInput.value.length;
+
   charCount.textContent = length;
 }
 
@@ -172,6 +172,7 @@ addBtn.addEventListener("click", () => {
 
   if (editingNoteId) {
     updateNote(editingNoteId, text);
+
     exitEditMode();
   } else {
     addNote(text);
@@ -192,6 +193,7 @@ noteInput.addEventListener("input", () => {
   );
 
   updateCharacterCounter();
+
   updateAddButtonState();
 });
 
@@ -200,6 +202,7 @@ noteInput.addEventListener("input", () => {
 if (searchInput) {
   searchInput.addEventListener("input", e => {
     searchQuery = e.target.value.trim();
+
     renderNotes();
   });
 }
@@ -207,7 +210,9 @@ if (searchInput) {
 /* -------------------- EVENT DELEGATION -------------------- */
 
 notesContainer.addEventListener("click", e => {
-  const actionButton = e.target.closest("button[data-action]");
+  const actionButton = e.target.closest(
+    "button[data-action]"
+  );
 
   if (!actionButton) return;
 
@@ -266,14 +271,18 @@ window.addEventListener("storage", event => {
       renderNotes();
     }
   } catch (err) {
-    console.error("Failed to sync notes across tabs:", err);
+    console.error(
+      "Failed to sync notes across tabs:",
+      err
+    );
   }
 });
 
 /* -------------------- HELPERS -------------------- */
 
 function updateAddButtonState() {
-  addBtn.disabled = normalizeInput(noteInput.value) === "";
+  addBtn.disabled =
+    normalizeInput(noteInput.value) === "";
 }
 
 function enterEditMode(note) {
@@ -287,6 +296,7 @@ function enterEditMode(note) {
 
   updateCharacterCounter();
   updateAddButtonState();
+
   renderNotes();
 }
 
@@ -301,6 +311,7 @@ function exitEditMode() {
 
   updateCharacterCounter();
   updateAddButtonState();
+
   renderNotes();
 }
 
@@ -310,6 +321,7 @@ try {
   notes = sanitizeNotes(loadNotes());
 } catch (err) {
   console.error("Failed to initialize notes:", err);
+
   notes = [];
 }
 

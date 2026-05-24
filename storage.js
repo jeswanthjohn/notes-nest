@@ -1,18 +1,5 @@
-/* -------------------- STORAGE MODULE -------------------- */
-
-const STORAGE_KEY = "notes-app-data";
-
-/* -------------------- VALIDATION -------------------- */
-
-function isValidNote(note) {
-  return (
-    typeof note === "object" &&
-    typeof note.id === "string" &&
-    typeof note.content === "string" &&
-    typeof note.createdAt === "number" &&
-    typeof note.updatedAt === "number"
-  );
-}
+import { STORAGE_KEY } from "./config.js";
+import { isValidNote } from "./validation.js";
 
 /* -------------------- LOAD -------------------- */
 
@@ -42,7 +29,11 @@ export function loadNotes() {
 
     if (validNotes.length !== parsed.length) {
       console.warn("Invalid note entries detected. Cleaning storage.");
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(validNotes));
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(validNotes)
+      );
     }
 
     return validNotes;
@@ -60,7 +51,8 @@ export function saveNotes(notes) {
   } catch (err) {
     console.error("Failed to save notes:", err);
 
-    // Optional UX-safe fallback signal
-    alert("Unable to save notes. Storage may be full or restricted.");
+    alert(
+      "Unable to save notes. Storage may be full or restricted."
+    );
   }
 }
