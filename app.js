@@ -1,5 +1,6 @@
 import { loadNotes, saveNotes } from "./storage.js";
 import { renderNote } from "./noteRenderer.js";
+import { renderNotes as renderNotesView } from "./render.js";
 
 import {
   normalizeInput,
@@ -130,33 +131,15 @@ function getFilteredNotes() {
 /* -------------------- UI -------------------- */
 
 function renderNotes() {
-  notesContainer
-    .querySelectorAll(".note")
-    .forEach(n => n.remove());
-
-  const filteredNotes = getFilteredNotes();
-
-  if (filteredNotes.length === 0) {
-    emptyState.classList.remove("hidden");
-    return;
-  }
-
-  emptyState.classList.add("hidden");
-
-  const fragment = document.createDocumentFragment();
-
-  filteredNotes.forEach(note => {
-    const noteElement = renderNote(
-      note,
-      formatDate,
-      escapeHTML,
-      note.id === editingNoteId
-    );
-
-    fragment.appendChild(noteElement);
+  renderNotesView({
+    notes: getFilteredNotes(),
+    notesContainer,
+    emptyState,
+    renderNote,
+    formatDate,
+    escapeHTML,
+    editingNoteId
   });
-
-  notesContainer.appendChild(fragment);
 }
 
 function updateCharacterCounter() {
