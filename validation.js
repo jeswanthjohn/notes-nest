@@ -1,3 +1,10 @@
+
+/**
+ * Validates the shape of a note object.
+ *
+ * @param {Object} note
+ * @returns {boolean}
+ */
 export function isValidNote(note) {
   return (
     typeof note === "object" &&
@@ -9,6 +16,12 @@ export function isValidNote(note) {
   );
 }
 
+/**
+ * Filters a collection and returns only valid notes.
+ *
+ * @param {*} input
+ * @returns {Array<Object>}
+ */
 export function sanitizeNotes(input) {
   if (!Array.isArray(input)) return [];
 

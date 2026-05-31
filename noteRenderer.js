@@ -1,3 +1,13 @@
+
+/**
+ * Creates and returns a rendered note element.
+ *
+ * @param {Object} note
+ * @param {Function} formatDate
+ * @param {Function} escapeHTML
+ * @param {boolean} [isEditing=false]
+ * @returns {HTMLDivElement}
+ */
 export function renderNote(
   note,
   formatDate,

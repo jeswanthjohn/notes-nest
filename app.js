@@ -1,3 +1,4 @@
+
 import { loadNotes, saveNotes } from "./storage.js";
 import { renderNote } from "./noteRenderer.js";
 import { renderNotes as renderNotesView } from "./render.js";
@@ -31,6 +32,12 @@ const searchInput = document.getElementById("searchInput");
 
 /* -------------------- STATE API -------------------- */
 
+/**
+ * Updates application state, persists notes,
+ * and triggers a UI refresh.
+ *
+ * @param {Array<Object>} newNotes
+ */
 function setNotes(newNotes) {
   notes = sanitizeNotes(newNotes);
 
@@ -41,6 +48,11 @@ function setNotes(newNotes) {
 
 /* -------------------- CRUD OPERATIONS -------------------- */
 
+/**
+ * Creates and stores a new note.
+ *
+ * @param {string} content
+ */
 function addNote(content) {
   const normalized = normalizeInput(content);
 
@@ -70,6 +82,12 @@ function addNote(content) {
   setNotes([note, ...notes]);
 }
 
+/**
+ * Updates an existing note.
+ *
+ * @param {string} id
+ * @param {string} content
+ */
 function updateNote(id, content) {
   const normalized = normalizeInput(content);
 
@@ -104,6 +122,11 @@ function updateNote(id, content) {
   setNotes(updated);
 }
 
+/**
+ * Removes a note by id.
+ *
+ * @param {string} id
+ */
 function deleteNote(id) {
   const exists = notes.some(n => n.id === id);
 
@@ -118,6 +141,11 @@ function deleteNote(id) {
 
 /* -------------------- SEARCH -------------------- */
 
+/**
+ * Returns notes filtered by the active search query.
+ *
+ * @returns {Array<Object>}
+ */
 function getFilteredNotes() {
   if (!searchQuery) return notes;
 
@@ -130,6 +158,9 @@ function getFilteredNotes() {
 
 /* -------------------- UI -------------------- */
 
+/**
+ * Renders the current note collection.
+ */
 function renderNotes() {
   renderNotesView({
     notes: getFilteredNotes(),
@@ -142,6 +173,9 @@ function renderNotes() {
   });
 }
 
+/**
+ * Updates the visible character counter.
+ */
 function updateCharacterCounter() {
   const length = noteInput.value.length;
 
@@ -263,11 +297,20 @@ window.addEventListener("storage", event => {
 
 /* -------------------- HELPERS -------------------- */
 
+/**
+ * Enables or disables the primary action button
+ * based on the current input value.
+ */
 function updateAddButtonState() {
   addBtn.disabled =
     normalizeInput(noteInput.value) === "";
 }
 
+/**
+ * Activates edit mode for the selected note.
+ *
+ * @param {Object} note
+ */
 function enterEditMode(note) {
   editingNoteId = note.id;
 
@@ -283,6 +326,9 @@ function enterEditMode(note) {
   renderNotes();
 }
 
+/**
+ * Resets the editor and exits edit mode.
+ */
 function exitEditMode() {
   editingNoteId = null;
 

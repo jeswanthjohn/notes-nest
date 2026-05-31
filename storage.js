@@ -1,8 +1,15 @@
+
 import { STORAGE_KEY } from "./config.js";
 import { isValidNote } from "./validation.js";
 
 /* -------------------- LOAD -------------------- */
 
+/**
+ * Loads notes from localStorage, validates the data,
+ * and automatically removes malformed entries.
+ *
+ * @returns {Array<Object>} Array of valid note objects.
+ */
 export function loadNotes() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -45,6 +52,11 @@ export function loadNotes() {
 
 /* -------------------- SAVE -------------------- */
 
+/**
+ * Persists notes to localStorage.
+ *
+ * @param {Array<Object>} notes - Notes to persist.
+ */
 export function saveNotes(notes) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
