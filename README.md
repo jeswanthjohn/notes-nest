@@ -13,44 +13,86 @@ This project is a **frontend CRUD application** built without frameworks to prac
 The emphasis is on **clarity of state flow, separation of concerns, accessibility, and correctness**, rather than feature quantity or visual complexity.
 
 ---
----
 
 ## 🏗️ Architecture Overview
 
-The application follows a simple modular architecture where **state management, rendering, and persistence are intentionally separated**.
+The application follows a modular Vanilla JavaScript architecture where responsibilities are separated into focused modules.
 
 ```text
 User Interaction
       │
       ▼
    app.js
-(State + UI Logic)
+(Application Controller)
       │
       ├── storage.js
-      │   Handles persistence using localStorage
+      │   Persistence and localStorage safety
       │
-      └── noteRenderer.js
-          Responsible for rendering note UI components
+      ├── render.js
+      │   Notes list rendering orchestration
+      │
+      ├── noteRenderer.js
+      │   Individual note UI generation
+      │
+      ├── validation.js
+      │   Data validation and sanitization
+      │
+      ├── utils.js
+      │   Formatting and reusable helpers
+      │
+      └── config.js
+          Application configuration
 ```
+
+This separation keeps rendering, persistence, validation, configuration, and reusable utilities isolated from core application logic.
 
 ## Module Responsibilities
 
 ### app.js
-- Central application controller
-- Manages state (notes)
-- Handles input validation
-- Coordinates rendering and persistence
-- Implements event delegation for note actions
+
+* Application entry point
+* Coordinates state updates, rendering, and persistence
+* Handles CRUD operations
+* Manages edit mode and search state
+* Registers event listeners
 
 ### storage.js
-- Handles all interaction with localStorage
-- Validates stored data before loading
-- Ensures corrupted storage does not break the app
+
+* Handles all interaction with localStorage
+* Protects against malformed storage data
+* Persists application state safely
+
+### render.js
+
+* Coordinates rendering of note collections
+* Handles empty-state rendering behavior
+* Delegates note creation to noteRenderer.js
 
 ### noteRenderer.js
-- Encapsulates DOM creation for notes
-- Keeps rendering logic separate from application state
-- Improves maintainability and testability
+
+* Creates note DOM elements
+* Encapsulates note-specific UI generation
+* Keeps rendering concerns separate from application logic
+
+### validation.js
+
+* Validates note objects
+* Sanitizes persisted data before use
+
+### utils.js
+
+* Input normalization
+* Character limit enforcement
+* Date formatting
+* HTML escaping
+
+### config.js
+
+* Centralized application constants
+* Shared configuration values
+
+This structure improves maintainability by keeping each module focused on a single responsibility.
+
 
 **This separation keeps the codebase predictable, easier to reason about, and safer to extend.**
 
@@ -91,9 +133,10 @@ User Interaction
 
 ### State Management
 
-* Notes are managed through a **single source of truth**
-* All state mutations flow through a centralized `setNotes()` function
-* Ensures consistent rendering and avoids scattered side effects
+* Notes are maintained in application memory and synchronized with localStorage
+* Rendering is triggered through controlled update flows after state changes
+* Search results are derived from existing note data rather than stored separately
+* State remains intentionally simple to match the scope of a frontend-only application
 
 ### Event Delegation
 
@@ -197,6 +240,26 @@ The following were intentionally excluded to keep the project focused:
 
 ---
 
+## ⚡ Performance Considerations
+
+- Uses event delegation patterns where appropriate
+- Minimizes unnecessary DOM operations
+- Avoids redundant localStorage writes
+- Filters notes dynamically without duplicating state
+- Uses lightweight Vanilla JavaScript without framework overhead
+
+---
+
+## ♿ Accessibility Considerations
+
+- Semantic HTML structure
+- Keyboard-accessible controls
+- Proper button labeling
+- Focus-visible interaction states
+- Responsive layout for smaller screens
+- Readable color contrast and spacing
+
+
 ## 🛠️ Tech Stack
 
 * HTML5 (semantic, accessible markup)
@@ -212,11 +275,18 @@ The following were intentionally excluded to keep the project focused:
 
 ```text
 /
-├── index.html     # Semantic, accessible markup
-├── styles.css     # Responsive styling and visual feedback
-├── app.js         # State management, UI logic, and search/filter handling
+├── index.html
+├── styles.css
+├── app.js
+├── config.js
+├── storage.js
+├── validation.js
+├── utils.js
+├── render.js
+├── noteRenderer.js
 └── README.md
 ```
+
 
 ---
 
